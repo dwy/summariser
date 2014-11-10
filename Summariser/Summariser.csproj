@@ -47,6 +47,9 @@
     <Reference Include="CacheCow.Server.EntityTagStore.Memcached">
       <HintPath>..\packages\CacheCow.Server.EntityTagStore.Memcached.0.5.1\lib\net40\CacheCow.Server.EntityTagStore.Memcached.dll</HintPath>
     </Reference>
+    <Reference Include="CacheCow.Server.EntityTagStore.SqlServer">
+      <HintPath>..\packages\CacheCow.Server.EntityTagStore.SqlServer.0.5.1\lib\net40\CacheCow.Server.EntityTagStore.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
