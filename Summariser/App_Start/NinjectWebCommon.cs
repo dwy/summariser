@@ -64,7 +64,6 @@ namespace Summariser.App_Start
         private static void RegisterServices(IKernel kernel)
         {
 			kernel.Bind<ISummariserRepository>().To<SummariserRepository>();
-			kernel.Bind<SummariserContext>().To<SummariserContext>();
         }        
     }
 }
