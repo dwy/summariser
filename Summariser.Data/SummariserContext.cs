@@ -11,6 +11,7 @@ namespace Summariser.Data
 	public class SummariserContext : DbContext
 	{
 		public SummariserContext()
+			: base("DefaultConnection")
 		{
 			
 		}
