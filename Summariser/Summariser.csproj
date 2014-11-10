@@ -38,11 +38,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheCow.Common">
+      <HintPath>..\packages\CacheCow.Common.0.6.0\lib\net40\CacheCow.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CacheCow.Server">
+      <HintPath>..\packages\CacheCow.Server.0.6.0\lib\net40\CacheCow.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="CacheCow.Server.EntityTagStore.Memcached">
+      <HintPath>..\packages\CacheCow.Server.EntityTagStore.Memcached.0.5.1\lib\net40\CacheCow.Server.EntityTagStore.Memcached.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Enyim.Caching">
+      <HintPath>..\packages\EnyimMemcached.2.12\lib\net35\Enyim.Caching.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
