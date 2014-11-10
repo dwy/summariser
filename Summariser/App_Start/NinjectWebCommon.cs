@@ -1,5 +1,3 @@
-using System.Web.Http;
-using System.Web.Http.Filters;
 using Summariser.Data;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Summariser.App_Start.NinjectWebCommon), "Start")]
@@ -48,12 +46,6 @@ namespace Summariser.App_Start
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-
-				// Support WebAPI
-//				GlobalConfiguration.Configuration.DependencyResolver =
-//				  new NinjectResolver(kernel);
-//				GlobalConfiguration.Configuration.Services.Add(typeof(IFilterProvider),
-//				  new NinjectWebApiFilterProvider(kernel));
 
                 RegisterServices(kernel);
                 return kernel;
