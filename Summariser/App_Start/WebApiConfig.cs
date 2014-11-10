@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
+using WebApiContrib.Formatting.Jsonp;
 
 namespace Summariser
 {
@@ -24,6 +25,9 @@ namespace Summariser
 
 			var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
 			jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+			var formatter = new JsonpMediaTypeFormatter(jsonFormatter, "callback");
+			config.Formatters.Insert(0, formatter);
 		}
 	}
 }
