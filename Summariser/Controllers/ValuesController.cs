@@ -27,10 +27,14 @@ namespace Summariser.Controllers
 			return summaryValues;
 		}
 
-		public SummaryValueModel Get(Guid id)
+		public HttpResponseMessage Get(Guid id)
 		{
-			var summaryValue = _modelFactory.Create(_repository.GetValue(id));
-			return summaryValue;
+			var summaryValue = _repository.GetValue(id);
+			if (summaryValue == null)
+			{
+				return Request.CreateResponse(HttpStatusCode.NotFound);
+			}
+			return Request.CreateResponse(HttpStatusCode.OK, _modelFactory.Create(summaryValue));
 		}
 
 		public HttpResponseMessage Post([FromBody] SummaryValueModel valueToInsert)
