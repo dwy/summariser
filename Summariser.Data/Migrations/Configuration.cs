@@ -19,7 +19,7 @@ namespace Summariser.Data.Migrations
 	        {
 				context.SummaryValues.AddOrUpdate(
 					s => s.Id,
-					new SummaryValue { Value = "value " + i, LastModified = DateTime.Now }
+					new SummaryValue { Value = "value " + i, LastModified = DateTime.UtcNow }
 				);
 	        }
         }

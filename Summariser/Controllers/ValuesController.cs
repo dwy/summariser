@@ -68,5 +68,39 @@ namespace Summariser.Controllers
 
 			return Request.CreateResponse(HttpStatusCode.BadRequest);
 		}
+
+
+		[HttpPut]
+		[HttpPatch]
+		public HttpResponseMessage Put(Guid id, [FromBody] SummaryValueModel valueToModify)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					return Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid value provided.");
+				}
+
+				var existingEntity = _repository.GetValue(id);
+				if (existingEntity == null)
+				{
+					return Request.CreateResponse(HttpStatusCode.NotFound);
+				}
+
+				var parsedEntity = _modelFactory.Parse(valueToModify);
+				existingEntity.Value = parsedEntity.Value;
+				existingEntity.LastModified = DateTime.UtcNow;
+
+				if (_repository.SaveAll())
+				{
+					return Request.CreateResponse(HttpStatusCode.OK);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
+			return Request.CreateResponse(HttpStatusCode.BadRequest);
+		}
 	}
 }
