@@ -10,5 +10,6 @@ namespace Summariser.Data
 		SummaryValue GetValue(Guid id);
 
 		bool SaveAll();
+		bool Insert(SummaryValue value);
 	}
 }

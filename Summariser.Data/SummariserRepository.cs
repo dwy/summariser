@@ -27,5 +27,18 @@ namespace Summariser.Data
 		{
 			return _context.SaveChanges() > 0;
 		}
+
+		public bool Insert(SummaryValue value)
+		{
+			try
+			{
+				_context.SummaryValues.Add(value);
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
 	}
 }

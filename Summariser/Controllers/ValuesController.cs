@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using Summariser.Data;
 using Summariser.Models;
@@ -19,18 +21,48 @@ namespace Summariser.Controllers
 		}
 
 
-		// GET api/<controller>
 		public IEnumerable<SummaryValueModel> Get()
 		{
 			var summaryValues = _repository.GetAllValues().ToList().Select(s => _modelFactory.Create(s));
 			return summaryValues;
 		}
 
-		// GET api/<controller>/5
 		public SummaryValueModel Get(Guid id)
 		{
 			var summaryValue = _modelFactory.Create(_repository.GetValue(id));
 			return summaryValue;
+		}
+
+		public HttpResponseMessage Post([FromBody] SummaryValueModel valueToInsert)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					return Request.CreateResponse(HttpStatusCode.BadRequest);
+				}
+
+				// should not exist yet
+				var existingValue = _repository.GetValue(valueToInsert.Id);
+				if (existingValue != null)
+				{
+					return Request.CreateResponse(HttpStatusCode.Conflict, "A value with this id already exists.");
+				}
+
+				var entity = _modelFactory.Parse(valueToInsert);
+				var insertedAndSaved = _repository.Insert(entity) && _repository.SaveAll();
+
+				if (insertedAndSaved)
+				{
+					return Request.CreateResponse(HttpStatusCode.Created, _modelFactory.Create(entity));
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
+
+			return Request.CreateResponse(HttpStatusCode.BadRequest);
 		}
 	}
 }
