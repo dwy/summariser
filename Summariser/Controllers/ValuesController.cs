@@ -102,5 +102,27 @@ namespace Summariser.Controllers
 			}
 			return Request.CreateResponse(HttpStatusCode.BadRequest);
 		}
+
+		public HttpResponseMessage Delete(Guid id)
+		{
+			try
+			{
+				var existingEntity = _repository.GetValue(id);
+				if (existingEntity == null)
+				{
+					return Request.CreateResponse(HttpStatusCode.NotFound);
+				}
+				bool deletedAndSaved = _repository.Delete(id) && _repository.SaveAll();
+				if (deletedAndSaved)
+				{
+					return Request.CreateResponse(HttpStatusCode.OK);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
+			return Request.CreateResponse(HttpStatusCode.BadRequest);
+		}
 	}
 }

@@ -40,5 +40,23 @@ namespace Summariser.Data
 				return false;
 			}
 		}
+
+		public bool Delete(Guid id)
+		{
+			try
+			{
+				var valueToDelete = _context.SummaryValues.FirstOrDefault(v => v.Id.Equals(id));
+				if (valueToDelete != null)
+				{
+					_context.SummaryValues.Remove(valueToDelete);
+					return true;
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
+			return false;
+		}
 	}
 }

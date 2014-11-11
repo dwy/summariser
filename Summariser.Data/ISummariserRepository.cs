@@ -11,5 +11,6 @@ namespace Summariser.Data
 
 		bool SaveAll();
 		bool Insert(SummaryValue value);
+		bool Delete(Guid id);
 	}
 }
