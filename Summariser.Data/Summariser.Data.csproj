@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -52,9 +52,49 @@
   <ItemGroup>
     <Compile Include="Entities\SummaryValue.cs" />
     <Compile Include="ISummariserRepository.cs" />
+    <Compile Include="Migrations\201411121713353_CacheCowSqlServer.cs" />
+    <Compile Include="Migrations\201411121713353_CacheCowSqlServer.Designer.cs">
+      <DependentUpon>201411121713353_CacheCowSqlServer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SummariserContext.cs" />
     <Compile Include="SummariserRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201411121713353_CacheCowSqlServer.resx">
+      <DependentUpon>201411121713353_CacheCowSqlServer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CacheCow_CreateDatabaseAndProcedures.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AlterProcedure_AddOrUpdateCache.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AlterProcedure_ClearCache.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AlterProcedure_DeleteCacheById.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AlterProcedure_DeleteCacheByResourceUri.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AlterProcedure_DeleteCacheByRoutePattern.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AlterProcedure_GetCache.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
