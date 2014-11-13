@@ -18,7 +18,7 @@ namespace Summariser.Data
 			return _context.SummaryValues;
 		}
 
-		public SummaryValue GetValue(int id)
+		public SummaryValue GetValue(Guid id)
 		{
 			return _context.SummaryValues.SingleOrDefault(v => v.Id.Equals(id));
 		}
@@ -41,7 +41,7 @@ namespace Summariser.Data
 			}
 		}
 
-		public bool Delete(int id)
+		public bool Delete(Guid id)
 		{
 			try
 			{

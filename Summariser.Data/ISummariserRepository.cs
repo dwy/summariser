@@ -7,10 +7,10 @@ namespace Summariser.Data
 	public interface ISummariserRepository
 	{
 		IQueryable<SummaryValue> GetAllValues();
-		SummaryValue GetValue(int id);
+		SummaryValue GetValue(Guid id);
 
 		bool SaveAll();
 		bool Insert(SummaryValue value);
-		bool Delete(int id);
+		bool Delete(Guid id);
 	}
 }
