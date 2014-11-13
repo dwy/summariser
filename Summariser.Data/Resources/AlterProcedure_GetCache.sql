@@ -3,7 +3,7 @@
 -- Create date: 2012-07-12
 -- Description:	returns cache entry by its Id
 -- =============================================
-ALTER PROCEDURE Server_GetCache
+CREATE PROCEDURE Server_GetCache
 	@cacheKeyHash		BINARY(20)
 	 
 AS

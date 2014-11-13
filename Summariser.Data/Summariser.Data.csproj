@@ -56,6 +56,10 @@
     <Compile Include="Migrations\201411121713353_CacheCowSqlServer.Designer.cs">
       <DependentUpon>201411121713353_CacheCowSqlServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201411131941317_MigratePlease.cs" />
+    <Compile Include="Migrations\201411131941317_MigratePlease.Designer.cs">
+      <DependentUpon>201411131941317_MigratePlease.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -68,6 +72,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201411121713353_CacheCowSqlServer.resx">
       <DependentUpon>201411121713353_CacheCowSqlServer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411131941317_MigratePlease.resx">
+      <DependentUpon>201411131941317_MigratePlease.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

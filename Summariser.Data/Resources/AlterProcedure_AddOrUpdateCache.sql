@@ -3,7 +3,7 @@
 -- Create date: 2012-07-12
 -- Description:	Adds or updates cache entry
 -- =============================================
-ALTER PROCEDURE Server_AddUpdateCache
+CREATE PROCEDURE Server_AddUpdateCache
 	@cacheKeyHash	BINARY(20),
 	@routePattern	NVARCHAR(256),
 	@resourceUri	NVARCHAR(256),
