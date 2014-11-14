@@ -27,7 +27,7 @@ namespace Summariser.Controllers
 			return summaryValues;
 		}
 
-		public HttpResponseMessage Get(Guid id)
+		public HttpResponseMessage Get(int id)
 		{
 			var summaryValue = _repository.GetValue(id);
 			if (summaryValue == null)
@@ -72,7 +72,7 @@ namespace Summariser.Controllers
 
 		[HttpPut]
 		[HttpPatch]
-		public HttpResponseMessage Put(Guid id, [FromBody] SummaryValueModel valueToModify)
+		public HttpResponseMessage Put(int id, [FromBody] SummaryValueModel valueToModify)
 		{
 			try
 			{
@@ -103,7 +103,7 @@ namespace Summariser.Controllers
 			return Request.CreateResponse(HttpStatusCode.BadRequest);
 		}
 
-		public HttpResponseMessage Delete(Guid id)
+		public HttpResponseMessage Delete(int id)
 		{
 			try
 			{

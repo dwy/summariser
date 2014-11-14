@@ -8,7 +8,7 @@ namespace Summariser.Data.Entities
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public Guid Id { get; set; }
+		public int Id { get; set; }
 
 		public string Value { get; set; }
 		public DateTime LastModified { get; set; }
