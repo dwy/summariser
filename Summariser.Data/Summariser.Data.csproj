@@ -52,6 +52,11 @@
   <ItemGroup>
     <Compile Include="Entities\SummaryValue.cs" />
     <Compile Include="ISummariserRepository.cs" />
+    <Compile Include="Migrations\201411140624396_Initial.cs" />
+    <Compile Include="Migrations\201411140624396_Initial.Designer.cs">
+      <DependentUpon>201411140624396_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -61,6 +66,9 @@
     <Compile Include="SummariserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201411140624396_Initial.resx">
+      <DependentUpon>201411140624396_Initial.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
