@@ -4,15 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Routing;
 using Summariser.Data;
 using Summariser.Models;
 
 namespace Summariser.Controllers
 {
+	[RoutePrefix("api/values")]
 	public class ValuesController : ApiController
 	{
+		private const int PageSize = 25;
 		private readonly ISummariserRepository _repository;
 		private readonly ModelFactory _modelFactory;
+
 
 		public ValuesController(ISummariserRepository repository)
 		{
@@ -21,10 +25,40 @@ namespace Summariser.Controllers
 		}
 
 
-		public IEnumerable<SummaryValueModel> Get()
+		[Route("", Name = "values")]
+		public object GetAllValues(int page = 0)
 		{
-			var summaryValues = _repository.GetAllValues().ToList().Select(s => _modelFactory.Create(s));
-			return summaryValues;
+			var urlHelper = new UrlHelper(Request);
+
+			var allValues = _repository.GetAllValues();
+			var totalCount = allValues.Count();
+			var totalPages = Math.Ceiling((double)totalCount / PageSize);
+
+
+			string prevPageLink = "";
+			if (page > 0)
+			{
+				prevPageLink = urlHelper.Link("values", new { page = page - 1 });
+			}
+
+			string nextPageLink = "";
+			if (page < totalPages - 1)
+			{
+				nextPageLink = urlHelper.Link("values", new { page = page + 1 });
+			}
+
+			var summaryValues = allValues.OrderBy(v => v.Id)
+				.Skip(PageSize * page).Take(PageSize).ToList()
+				.Select(s => _modelFactory.Create(s));
+
+			return new
+			{
+				prevPage =  prevPageLink,
+				nextPage = nextPageLink, 
+				totalCount, 
+				totalPages,
+				values =  summaryValues
+			};
 		}
 
 		public HttpResponseMessage Get(int id)
