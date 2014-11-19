@@ -28,6 +28,11 @@ namespace Summariser.Controllers
 		[Route("", Name = "values")]
 		public object GetAllValues(int page = 0)
 		{
+			if (page < 0)
+			{
+				return Request.CreateResponse(HttpStatusCode.BadRequest, "page must not be negative");
+			}
+
 			var urlHelper = new UrlHelper(Request);
 
 			var allValues = _repository.GetAllValues();
@@ -53,8 +58,8 @@ namespace Summariser.Controllers
 
 			return new
 			{
-				prevPage =  prevPageLink,
-				nextPage = nextPageLink, 
+				prevPage = _modelFactory.CreateLink(prevPageLink, "prevPage"),
+				nextPage = _modelFactory.CreateLink(nextPageLink, "nextPage"), 
 				totalCount, 
 				totalPages,
 				values =  summaryValues

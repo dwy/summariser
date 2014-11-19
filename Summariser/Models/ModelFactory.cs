@@ -21,5 +21,15 @@ namespace Summariser.Models
 				Value = value.Value, LastModified = value.LastModified
 			};
 		}
+
+		public LinkModel CreateLink(string href, string rel, string method = "GET")
+		{
+			return new LinkModel
+			{
+				Href = href,
+				Rel = rel,
+				Method = method
+			};
+		}
 	}
 }
