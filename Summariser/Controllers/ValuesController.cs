@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using Summariser.Data;
+using Summariser.Data.Entities;
 using Summariser.Models;
 
 namespace Summariser.Controllers
@@ -33,36 +34,43 @@ namespace Summariser.Controllers
 				return Request.CreateResponse(HttpStatusCode.BadRequest, "page must not be negative");
 			}
 
-			var links = new List<LinkModel>();
-
-			var urlHelper = new UrlHelper(Request);
-
 			var allValues = _repository.GetAllValues();
-			var totalCount = allValues.Count();
-			var totalPages = Math.Ceiling((double)totalCount / PageSize);
+			var pagedValues = allValues.OrderBy(v => v.Id)
+				.Skip(PageSize * page).Take(PageSize).ToList()
+				.Select(s => _modelFactory.Create(s));
+
+
+			return GetPagedResults(page, PageSize, allValues, pagedValues, Request);
+		}
+
+		private object GetPagedResults(int page, int pageSize, IEnumerable<SummaryValue> allResults, 
+			IEnumerable<SummaryValueModel> pagedResults, HttpRequestMessage request)
+		{
+			var modelFactory = new ModelFactory();
+			var links = new List<LinkModel>();
+			var urlHelper = new UrlHelper(request);
+
+			var totalCount = allResults.Count();
+			var totalPages = Math.Ceiling((double) totalCount/pageSize);
 
 			if (page > 0)
 			{
-				string prevPageUrl = urlHelper.Link("values", new { page = page - 1 });
-				links.Add(_modelFactory.CreateLink(prevPageUrl, "prevPage"));
+				string prevPageUrl = urlHelper.Link("values", new {page = page - 1});
+				links.Add(modelFactory.CreateLink(prevPageUrl, "prevPage"));
 			}
 
 			if (page < totalPages - 1)
 			{
-				string nextPageUrl = urlHelper.Link("values", new { page = page + 1 });
-				links.Add(_modelFactory.CreateLink(nextPageUrl, "nextPage"));
+				string nextPageUrl = urlHelper.Link("values", new {page = page + 1});
+				links.Add(modelFactory.CreateLink(nextPageUrl, "nextPage"));
 			}
-
-			var summaryValues = allValues.OrderBy(v => v.Id)
-				.Skip(PageSize * page).Take(PageSize).ToList()
-				.Select(s => _modelFactory.Create(s));
 
 			return new
 			{
 				links,
-				totalCount, 
+				totalCount,
 				totalPages,
-				values = summaryValues
+				results = pagedResults
 			};
 		}
 
