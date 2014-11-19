@@ -40,8 +40,8 @@ namespace Summariser.Controllers
 				.Select(s => _modelFactory.Create(s));
 
 
-			var defaultResultPager = new DefaultResultPager();
-			return defaultResultPager.GetPagedResults(page, PageSize, allValues, pagedValues, Request);
+			var defaultResultPager = new DefaultResultPager(Request, "values");
+			return defaultResultPager.GetPagedResults(page, PageSize, allValues, pagedValues);
 		}
 
 		public HttpResponseMessage Get(int id)
