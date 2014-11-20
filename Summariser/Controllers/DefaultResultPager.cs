@@ -19,8 +19,8 @@ namespace Summariser.Controllers
 			_routeName = routeName;
 		}
 
-		public object GetPagedResults(int page, int pageSize, IEnumerable<SummaryValue> allResults, 
-			Func<SummaryValue, SummaryValueModel> createModel)
+		public object GetPagedResults<TIn, TOut>(int page, int pageSize, IEnumerable<TIn> allResults, 
+			Func<TIn, TOut> createModel)
 		{
 			var modelFactory = new ModelFactory();
 			var links = new List<LinkModel>();
