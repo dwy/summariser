@@ -20,7 +20,7 @@ namespace Summariser.Controllers
 		}
 
 		public object GetPagedResults(int page, int pageSize, IEnumerable<SummaryValue> allResults, 
-			IEnumerable<SummaryValueModel> pagedResults)
+			Func<SummaryValue, SummaryValueModel> createModel)
 		{
 			var modelFactory = new ModelFactory();
 			var links = new List<LinkModel>();
@@ -41,12 +41,15 @@ namespace Summariser.Controllers
 				links.Add(modelFactory.CreateLink(nextPageUrl, "nextPage"));
 			}
 
+			var pagedValues = allResults.Skip(pageSize * page).Take(pageSize).ToList()
+				.Select(createModel); 
+
 			return new
 			{
 				links,
 				totalCount,
 				totalPages,
-				results = pagedResults
+				results = pagedValues
 			};
 		}
 	}

@@ -35,13 +35,12 @@ namespace Summariser.Controllers
 			}
 
 			var allValues = _repository.GetAllValues();
-			var pagedValues = allValues.OrderBy(v => v.Id)
-				.Skip(PageSize * page).Take(PageSize).ToList()
-				.Select(s => _modelFactory.Create(s));
-
+			Func<SummaryValue, SummaryValueModel> selector = s => _modelFactory.Create(s);
+			var orderedValues = allValues.OrderBy(v => v.Id);
 
 			var defaultResultPager = new DefaultResultPager(Request, "values");
-			return defaultResultPager.GetPagedResults(page, PageSize, allValues, pagedValues);
+			object pagedResults = defaultResultPager.GetPagedResults(page, PageSize, orderedValues, selector);
+			return pagedResults;
 		}
 
 		public HttpResponseMessage Get(int id)
