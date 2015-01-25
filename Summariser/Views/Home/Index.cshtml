@@ -5,6 +5,7 @@
 <h2>Values</h2>
 
 <div id="valuesTableOutput"></div>
+<div id="valueEditOutput"></div>
 
 <script id="valuesTableTemplate" type="text/html">
     <table>
@@ -20,8 +21,8 @@
                 <td>{{value}}</td>
                 <td>{{lastModified}}</td>
                 <td>
-                    <button class="editValue">Edit</button>
-                    <button class="deleteValue">Delete</button>
+                    <button class="edit-value">Edit</button>
+                    <button class="delete-value">Delete</button>
                 </td>
             </tr>
             {{/each}}
@@ -32,6 +33,18 @@
     {{/each}}
 </script>
 
+<script id="valueEditTemplate" type="text/html">
+    <hr />
+    <h3>Editing value id: {{id}}</h3>
+    <form>
+        <input type="hidden" name="id" id="id" value="{{id}}" />
+        <label for="value">Value: </label>
+        <input type="text" name="value" id="value" required value="{{value}}" />
+        <input type="submit" id="save-value" name="Save" />
+    </form>
+    <span>NOTE: may need a hard refresh from the browser so see the updated values. This is due to the caching.</span>
+</script>
+
 @section scripts
 {
     <script src="~/Scripts/handlebars.js"></script>
@@ -39,6 +52,14 @@
     <script>
         var valueServer = (function() {
             var valueApiUrl = '@Url.RouteUrl("DefaultApi", new {httproute = "", controller = "values"})';
+
+            $(document).ajaxError(function (event, xhr) {
+                alert(xhr.status + ":" + xhr.statusText);
+            });
+
+            var getValue = function (id) {
+                return $.get(valueApiUrl + "/" + id);
+            };
 
             var getValues = function (page) {
                 page = page || 0;
@@ -49,9 +70,18 @@
                 return $.get(url);
             };
 
+            var updateValue = function (value) {
+                return $.ajax(valueApiUrl + "/" + value.id, {
+                    type: "PUT",
+                    data: value
+                });
+            };
+
             return {
+                getValue: getValue,
                 getValues: getValues,
-                getValuesFromUrl: getValuesFromUrl
+                getValuesFromUrl: getValuesFromUrl,
+                updateValue: updateValue
             };
         }());
 
@@ -60,12 +90,14 @@
 
             var compileTemplates = function() {
                 templates.valuesTable = Handlebars.compile($("#valuesTableTemplate").html());
+                templates.valueEdit = Handlebars.compile($("#valueEditTemplate").html());
             };
 
             var showValues = function(data) {
                 var output = templates.valuesTable({
                     value: data.results, 
-                    links: data.links
+                    links: data.links,
+                    page: data.page
                 });
                 $("#valuesTableOutput").html(output);
             };
@@ -79,8 +111,37 @@
                 valueServer.getValuesFromUrl(url).done(showValues);
             };
 
+            var editValue = function () {
+                var id = getValueId(this);
+                valueServer.getValue(id).done(showValueToEdit);
+            };
+
+            var getValueId = function (element) {
+                return $(element).parents("tr").attr("data-id");
+            };
+
+            var showValueToEdit = function(valueToEdit) {
+                var output = templates.valueEdit(valueToEdit);
+                $("#valueEditOutput").html(output);
+            };
+
+            var saveValue = function () {
+                var valueToSave = {
+                    "id": $("#id").val(),
+                    "value": $("#value").val()
+                };
+                valueServer.updateValue(valueToSave).done(refreshValues, clearEdit);
+                return false;
+            };
+
+            var clearEdit = function() {
+                $("#valueEditOutput").empty();
+            };
+
             var registerClicks = function() {
                 $(document).on("click", ".navigation-link", goToPage);
+                $(document).on("click", ".edit-value", editValue);
+                $(document).on("click", "#save-value", saveValue);
             };
 
             $(function () {
