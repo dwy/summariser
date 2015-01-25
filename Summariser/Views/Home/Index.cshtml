@@ -1,13 +1,10 @@
-﻿@model dynamic
-
-@{
+﻿@{
     ViewBag.Title = "Values";
 }
 
 <h2>Values</h2>
 
 <div id="valuesTableOutput"></div>
-
 
 <script id="valuesTableTemplate" type="text/html">
     <table>
@@ -30,6 +27,9 @@
             {{/each}}
         </tbody>
     </table>
+    {{#each links}}
+    <a class="navigation-link" href="javascript:void(0);" data-url="{{href}}" id="{{rel}}">{{rel}}</a>
+    {{/each}}
 </script>
 
 @section scripts
@@ -40,27 +40,55 @@
         var valueServer = (function() {
             var valueApiUrl = '@Url.RouteUrl("DefaultApi", new {httproute = "", controller = "values"})';
 
-            var getValues = function() {
-                return $.get(valueApiUrl);
+            var getValues = function (page) {
+                page = page || 0;
+                return $.get(valueApiUrl +"?page="+page);
+            };
+
+            var getValuesFromUrl = function(url) {
+                return $.get(url);
             };
 
             return {
-                getValues: getValues
+                getValues: getValues,
+                getValuesFromUrl: getValuesFromUrl
             };
         }());
 
-        $(document).ready(function() {
-            var templates = {
-                valuesTable : Handlebars.compile($("#valuesTableTemplate").html())
+        (function() {
+            var templates = { };
+
+            var compileTemplates = function() {
+                templates.valuesTable = Handlebars.compile($("#valuesTableTemplate").html());
             };
 
             var showValues = function(data) {
-                var output = templates.valuesTable({ value: data.results });
+                var output = templates.valuesTable({
+                    value: data.results, 
+                    links: data.links
+                });
                 $("#valuesTableOutput").html(output);
             };
 
-            valueServer.getValues().done(showValues);
-        });
+            var refreshValues = function() {
+                valueServer.getValues().done(showValues);
+            };
+
+            var goToPage = function() {
+                var url = $(this).attr('data-url');
+                valueServer.getValuesFromUrl(url).done(showValues);
+            };
+
+            var registerClicks = function() {
+                $(document).on("click", ".navigation-link", goToPage);
+            };
+
+            $(function () {
+                registerClicks();
+                compileTemplates();
+                refreshValues();
+            });
+        }());
     </script>
 
 }
