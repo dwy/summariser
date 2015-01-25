@@ -5,6 +5,8 @@
 <h2>Values</h2>
 
 <div id="valuesTableOutput"></div>
+<hr/>
+<div>NOTE: may need a hard refresh from the browser so see the updated values. This is due to the caching library in use.</div>
 <div id="valueEditOutput"></div>
 
 <script id="valuesTableTemplate" type="text/html">
@@ -40,9 +42,8 @@
         <input type="hidden" name="id" id="id" value="{{id}}" />
         <label for="value">Value: </label>
         <input type="text" name="value" id="value" required value="{{value}}" />
-        <input type="submit" id="save-value" name="Save" />
+        <input type="submit" id="save-value" value="Save" />
     </form>
-    <span>NOTE: may need a hard refresh from the browser so see the updated values. This is due to the caching.</span>
 </script>
 
 @section scripts
@@ -77,11 +78,18 @@
                 });
             };
 
+            var deleteValue = function (id) {
+                return $.ajax(valueApiUrl + "/" + id, {
+                    type: "DELETE"
+                });
+            };
+
             return {
                 getValue: getValue,
                 getValues: getValues,
                 getValuesFromUrl: getValuesFromUrl,
-                updateValue: updateValue
+                updateValue: updateValue,
+                deleteValue: deleteValue
             };
         }());
 
@@ -134,6 +142,13 @@
                 return false;
             };
 
+            var deleteValue = function () {
+                var id = getValueId(this);
+                if (confirm("Are you sure you want to delete value " + id + "?")) {
+                    valueServer.deleteValue(id).done(refreshValues);
+                }
+            };
+
             var clearEdit = function() {
                 $("#valueEditOutput").empty();
             };
@@ -141,6 +156,7 @@
             var registerClicks = function() {
                 $(document).on("click", ".navigation-link", goToPage);
                 $(document).on("click", ".edit-value", editValue);
+                $(document).on("click", ".delete-value", deleteValue);
                 $(document).on("click", "#save-value", saveValue);
             };
 
