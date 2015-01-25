@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Routing;
-using Summariser.Data.Entities;
 using Summariser.Models;
 
 namespace Summariser.Controllers
