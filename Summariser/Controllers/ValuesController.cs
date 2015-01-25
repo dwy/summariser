@@ -12,7 +12,7 @@ namespace Summariser.Controllers
 	[RoutePrefix("api/values")]
 	public class ValuesController : ApiController
 	{
-		private const int PageSize = 25;
+		private const int DefaultPageSize = 10;
 		private readonly ISummariserRepository _repository;
 		private readonly ModelFactory _modelFactory;
 
@@ -25,7 +25,7 @@ namespace Summariser.Controllers
 
 
 		[Route("", Name = "values")]
-		public object GetAllValues(int page = 0)
+		public object GetAllValues(int page = 0, int pageSize = DefaultPageSize)
 		{
 			if (page < 0)
 			{
@@ -37,7 +37,7 @@ namespace Summariser.Controllers
 			var orderedValues = allValues.OrderBy(v => v.Id);
 
 			var defaultResultPager = new DefaultResultPager(Request, "values");
-			object pagedResults = defaultResultPager.GetPagedResults(page, PageSize, orderedValues, selector);
+			object pagedResults = defaultResultPager.GetPagedResults(page, pageSize, orderedValues, selector);
 			return pagedResults;
 		}
 

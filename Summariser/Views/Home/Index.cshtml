@@ -5,3 +5,62 @@
 }
 
 <h2>Values</h2>
+
+<div id="valuesTableOutput"></div>
+
+
+<script id="valuesTableTemplate" type="text/html">
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Value</th>
+            <th>Last modified</th>
+        </thead>
+        <tbody>
+            {{#each value}}
+            <tr data-id={{id}}>
+                <td>{{id}}</td>
+                <td>{{value}}</td>
+                <td>{{lastModified}}</td>
+                <td>
+                    <button class="editValue">Edit</button>
+                    <button class="deleteValue">Delete</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+
+@section scripts
+{
+    <script src="~/Scripts/handlebars.js"></script>
+
+    <script>
+        var valueServer = (function() {
+            var valueApiUrl = '@Url.RouteUrl("DefaultApi", new {httproute = "", controller = "values"})';
+
+            var getValues = function() {
+                return $.get(valueApiUrl);
+            };
+
+            return {
+                getValues: getValues
+            };
+        }());
+
+        $(document).ready(function() {
+            var templates = {
+                valuesTable : Handlebars.compile($("#valuesTableTemplate").html())
+            };
+
+            var showValues = function(data) {
+                var output = templates.valuesTable({ value: data.results });
+                $("#valuesTableOutput").html(output);
+            };
+
+            valueServer.getValues().done(showValues);
+        });
+    </script>
+
+}
