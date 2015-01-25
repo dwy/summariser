@@ -5,8 +5,9 @@
 <h2>Values</h2>
 
 <div id="valuesTableOutput"></div>
+<button id="insert-value">Insert new value</button>
 <hr/>
-<div>NOTE: may need a hard refresh from the browser so see the updated values. This is due to the caching library in use.</div>
+<div>NOTE: may need a hard refresh from the browser so see the modifications. This is due to the caching library in use.</div>
 <div id="valueEditOutput"></div>
 
 <script id="valuesTableTemplate" type="text/html">
@@ -37,7 +38,7 @@
 
 <script id="valueEditTemplate" type="text/html">
     <hr />
-    <h3>Editing value id: {{id}}</h3>
+    <h3>New value</h3>
     <form>
         <input type="hidden" name="id" id="id" value="{{id}}" />
         <label for="value">Value: </label>
@@ -84,12 +85,20 @@
                 });
             };
 
+            var insertValue = function (valueToAdd) {
+                return $.ajax(valueApiUrl + "/" + id, {
+                    type: "POST",
+                    data: valueToAdd
+                });
+            };
+
             return {
                 getValue: getValue,
                 getValues: getValues,
                 getValuesFromUrl: getValuesFromUrl,
                 updateValue: updateValue,
-                deleteValue: deleteValue
+                deleteValue: deleteValue,
+                insertValue: insertValue
             };
         }());
 
@@ -138,7 +147,13 @@
                     "id": $("#id").val(),
                     "value": $("#value").val()
                 };
-                valueServer.updateValue(valueToSave).done(refreshValues, clearEdit);
+                var action;
+                if (valueToSave.id !== "-1") {
+                    action = valueServer.updateValue(valueToSave);
+                } else {
+                    action = valueServer.insertValue(valueToSave);
+                }
+                action.done(refreshValues, clearEdit);
                 return false;
             };
 
@@ -147,6 +162,14 @@
                 if (confirm("Are you sure you want to delete value " + id + "?")) {
                     valueServer.deleteValue(id).done(refreshValues);
                 }
+            };
+
+            var insertValue = function () {
+                var newValue = {
+                    id: "-1",
+                    value: ""
+                };
+                showValueToEdit(newValue);
             };
 
             var clearEdit = function() {
@@ -158,6 +181,7 @@
                 $(document).on("click", ".edit-value", editValue);
                 $(document).on("click", ".delete-value", deleteValue);
                 $(document).on("click", "#save-value", saveValue);
+                $(document).on("click", "#insert-value", insertValue);
             };
 
             $(function () {

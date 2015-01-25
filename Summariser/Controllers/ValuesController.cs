@@ -68,6 +68,7 @@ namespace Summariser.Controllers
 				}
 
 				var entity = _modelFactory.Parse(valueToInsert);
+                entity.LastModified = DateTime.UtcNow;
 				var insertedAndSaved = _repository.Insert(entity) && _repository.SaveAll();
 
 				if (insertedAndSaved)
