@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,7 +26,7 @@ namespace Summariser.Controllers
 
 
 		[Route("", Name = "values")]
-		public object GetAllValues(int page = 0, int pageSize = DefaultPageSize)
+        public HttpResponseMessage GetAllValues(int page = 0, int pageSize = DefaultPageSize)
 		{
 			if (page < 0)
 			{
@@ -37,8 +38,8 @@ namespace Summariser.Controllers
 			var orderedValues = allValues.OrderBy(v => v.Id);
 
 			var defaultResultPager = new DefaultResultPager(Request, "values");
-			object pagedResults = defaultResultPager.GetPagedResults(page, pageSize, orderedValues, selector);
-			return pagedResults;
+			PagedResult<SummaryValueModel> pagedResults = defaultResultPager.GetPagedResults(page, pageSize, orderedValues, selector);
+			return Request.CreateResponse(HttpStatusCode.OK, pagedResults);
 		}
 
 		public HttpResponseMessage Get(int id)

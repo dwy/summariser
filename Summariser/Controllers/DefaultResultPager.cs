@@ -7,7 +7,7 @@ using Summariser.Models;
 
 namespace Summariser.Controllers
 {
-	public class DefaultResultPager
+    public class DefaultResultPager
 	{
 		private readonly HttpRequestMessage _request;
 		private readonly string _routeName;
@@ -18,15 +18,15 @@ namespace Summariser.Controllers
 			_routeName = routeName;
 		}
 
-		public object GetPagedResults<TIn, TOut>(int page, int pageSize, IEnumerable<TIn> allResults, 
+        public PagedResult<TOut> GetPagedResults<TIn, TOut>(int page, int pageSize, IEnumerable<TIn> allResults, 
 			Func<TIn, TOut> createModel)
 		{
 			var modelFactory = new ModelFactory();
 			var links = new List<LinkModel>();
 			var urlHelper = new UrlHelper(_request);
 
-			var totalCount = allResults.Count();
-			var totalPages = Math.Ceiling((double) totalCount/pageSize);
+			int totalCount = allResults.Count();
+			int totalPages = (int) Math.Ceiling((double) totalCount/pageSize);
 
 			if (page > 0)
 			{
@@ -43,13 +43,7 @@ namespace Summariser.Controllers
 			var pagedValues = allResults.Skip(pageSize * page).Take(pageSize).ToList()
 				.Select(createModel); 
 
-			return new
-			{
-				links,
-				totalCount,
-				totalPages,
-				results = pagedValues
-			};
+			return new PagedResult<TOut> {Links = links, TotalCount = totalCount, TotalPages = totalPages, Results = pagedValues};
 		}
 	}
 }

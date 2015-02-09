@@ -29,8 +29,10 @@ namespace Summariser
 			var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
 			jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
+		    var xmlFormatter = config.Formatters.OfType<XmlMediaTypeFormatter>().FirstOrDefault();
+
 			var formatter = new JsonpMediaTypeFormatter(jsonFormatter, "callback");
-			config.Formatters.Insert(0, formatter);
+			config.Formatters.Add(formatter);
 
 			var memcachedEntityTagStore = new MemcachedEntityTagStore(new MemcachedClientConfiguration());
 			var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
